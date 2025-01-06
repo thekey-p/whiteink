@@ -15,10 +15,13 @@
 
         /* 왼쪽 창 스타일 */
         .left-pane {
-            width: 30%; /* 화면의 30% 차지 */
+            width: 25%; /* 화면의 25% 차지 */
             background-color: #f4f4f4;
             padding: 20px;
             box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* 가운데 정렬 */
         }
 
         /* 로고 스타일 */
@@ -26,6 +29,7 @@
             font-size: 12pt;
             font-weight: bold;
             margin-bottom: 20px; /* 검색창과의 간격 */
+            text-align: center;
         }
 
         /* 검색창 스타일 */
@@ -48,6 +52,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px; /* 항목 간격 */
+            width: 100%;
         }
 
         .input-form label {
@@ -60,6 +65,23 @@
             font-size: 12px;
             border: 1px solid #ccc;
             border-radius: 4px;
+        }
+
+        /* 제출 버튼 스타일 */
+        .input-form button {
+            padding: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            background-color: black;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px; /* 상단 간격 */
+        }
+
+        .input-form button:hover {
+            background-color: #333;
         }
 
         /* 오른쪽 창 스타일 */
@@ -100,12 +122,12 @@
         </div>
 
         <!-- 입력 폼 -->
-        <form class="input-form">
+        <form class="input-form" id="data-form">
             <label for="author">저자 이름</label>
-            <input type="text" id="author" name="author" placeholder="저자 이름">
+            <input type="text" id="author" name="author" placeholder="저자 이름" required>
 
             <label for="genre">작품 장르</label>
-            <select id="genre" name="genre">
+            <select id="genre" name="genre" required>
                 <option value="시">시</option>
                 <option value="소설">소설</option>
                 <option value="희곡">희곡</option>
@@ -118,16 +140,18 @@
             </select>
 
             <label for="title">작품 제목</label>
-            <input type="text" id="title" name="title" placeholder="작품 제목">
+            <input type="text" id="title" name="title" placeholder="작품 제목" required>
 
             <label for="publication">발표 지면</label>
-            <input type="text" id="publication" name="publication" placeholder="발표 지면">
+            <input type="text" id="publication" name="publication" placeholder="발표 지면" required>
 
             <label for="year">발표 년도</label>
-            <input type="text" id="year" name="year" placeholder="발표 년도">
+            <input type="text" id="year" name="year" placeholder="발표 년도" required>
 
             <label for="season">발표 시기</label>
-            <input type="text" id="season" name="season" placeholder="발표 시기">
+            <input type="text" id="season" name="season" placeholder="발표 시기" required>
+
+            <button type="submit">제출</button>
         </form>
     </div>
 
@@ -144,10 +168,60 @@
                     <th>발표 시기</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="data-table-body">
                 <!-- 데이터 행 추가 예정 -->
             </tbody>
         </table>
     </div>
+
+    <script>
+        const form = document.getElementById('data-form');
+        const tableBody = document.getElementById('data-table-body');
+
+        // 로컬 저장소에서 데이터 로드
+        const loadData = () => {
+            const data = JSON.parse(localStorage.getItem('tableData')) || [];
+            data.forEach(row => addRow(row));
+        };
+
+        // 데이터 저장 함수
+        const saveData = (data) => {
+            const existingData = JSON.parse(localStorage.getItem('tableData')) || [];
+            existingData.push(data);
+            localStorage.setItem('tableData', JSON.stringify(existingData));
+        };
+
+        // 테이블에 행 추가 함수
+        const addRow = (rowData) => {
+            const row = document.createElement('tr');
+            Object.values(rowData).forEach(text => {
+                const cell = document.createElement('td');
+                cell.textContent = text;
+                row.appendChild(cell);
+            });
+            tableBody.appendChild(row);
+        };
+
+        // 폼 제출 처리
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const rowData = {
+                author: document.getElementById('author').value,
+                genre: document.getElementById('genre').value,
+                title: document.getElementById('title').value,
+                publication: document.getElementById('publication').value,
+                year: document.getElementById('year').value,
+                season: document.getElementById('season').value
+            };
+
+            addRow(rowData);
+            saveData(rowData);
+            form.reset();
+        });
+
+        // 초기 데이터 로드
+        loadData();
+    </script>
 </body>
 </html>
