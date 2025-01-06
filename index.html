@@ -1,173 +1,71 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>발표작 정리</title>
+    <title>WHITE INK</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        table, th, td { border: 1px solid black; }
-        th, td { padding: 8px; text-align: left; }
-        form { margin-bottom: 20px; }
-        .search-section { margin-top: 20px; }
-        button.delete { background-color: red; color: white; border: none; padding: 5px 10px; cursor: pointer; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffffff;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .title {
+            font-size: 150pt;
+            font-weight: bold;
+            color: #000000;
+            margin: 0;
+        }
+
+        .search-box {
+            margin-top: 20px;
+        }
+
+        .search-box input[type="text"] {
+            width: 300px;
+            height: 40px;
+            font-size: 16pt;
+            padding: 5px 10px;
+            border: 2px solid #000;
+            border-radius: 5px;
+        }
+
+        .login-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16pt;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #000000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .login-button:hover {
+            background-color: #333333;
+        }
     </style>
 </head>
 <body>
-    <h1>발표작 정리</h1>
-
-    <form id="entryForm">
-        <label for="genre">문학 장르:</label>
-        <select id="genre" required>
-            <option value="" disabled selected>선택하세요</option>
-            <option value="시">시</option>
-            <option value="소설">소설</option>
-            <option value="평론">평론</option>
-            <option value="동화">동화</option>
-            <option value="동시">동시</option>
-        </select><br><br>
-        
-        <label for="author">저자:</label>
-        <input type="text" id="author" required><br><br>
-
-        <label for="title">제목:</label>
-        <input type="text" id="title" required><br><br>
-
-        <label for="media">발표한 매체:</label>
-        <input type="text" id="media" required><br><br>
-
-        <label for="year">발표 년도:</label>
-        <input type="number" id="year" required><br><br>
-
-        <label for="month">발표 월 또는 계절:</label>
-        <input type="text" id="month" required><br><br>
-
-        <button type="submit">저장</button>
-    </form>
-
-    <div class="search-section">
-        <label for="search">검색:</label>
-        <input type="text" id="search" placeholder="검색어를 입력하세요">
-        <button id="searchButton">검색</button>
-        <button id="resetButton">초기화</button>
+    <div class="container">
+        <h1 class="title">WHITE INK</h1>
+        <div class="search-box">
+            <input type="text" placeholder="Search...">
+        </div>
+        <a href="#" class="login-button">Login</a>
     </div>
-
-    <h2>저장된 데이터</h2>
-    <table id="dataTable">
-        <thead>
-            <tr>
-                <th>문학 장르</th>
-                <th>저자</th>
-                <th>제목</th>
-                <th>발표한 매체</th>
-                <th>발표 년도</th>
-                <th>발표 월 또는 계절</th>
-                <th>삭제</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-
-    <script>
-        const form = document.getElementById('entryForm');
-        const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
-        const localStorageKey = 'presentationData';
-
-        // 데이터 로드
-        function loadData() {
-            const data = JSON.parse(localStorage.getItem(localStorageKey)) || [];
-            data.forEach(addRowToTable);
-        }
-
-        // 데이터 저장
-        function saveData(data) {
-            localStorage.setItem(localStorageKey, JSON.stringify(data));
-        }
-
-        // 테이블에 행 추가
-        function addRowToTable(entry) {
-            const newRow = dataTable.insertRow();
-
-            newRow.innerHTML = `
-                <td>${entry.genre}</td>
-                <td>${entry.author}</td>
-                <td>${entry.title}</td>
-                <td>${entry.media}</td>
-                <td>${entry.year}</td>
-                <td>${entry.month}</td>
-                <td><button class="delete">삭제</button></td>
-            `;
-
-            newRow.querySelector('.delete').addEventListener('click', () => {
-                const data = JSON.parse(localStorage.getItem(localStorageKey)) || [];
-                const index = Array.from(dataTable.rows).indexOf(newRow);
-                data.splice(index, 1);
-                saveData(data);
-                dataTable.deleteRow(index);
-            });
-        }
-
-        // 폼 제출 이벤트
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const entry = {
-                genre: document.getElementById('genre').value,
-                author: document.getElementById('author').value,
-                title: document.getElementById('title').value,
-                media: document.getElementById('media').value,
-                year: document.getElementById('year').value,
-                month: document.getElementById('month').value,
-            };
-
-            addRowToTable(entry);
-
-            const data = JSON.parse(localStorage.getItem(localStorageKey)) || [];
-            data.push(entry);
-            saveData(data);
-
-            form.reset(); // 입력 필드 초기화
-        });
-
-        // 검색 이벤트
-        document.getElementById('searchButton').addEventListener('click', function(event) {
-            event.preventDefault();
-
-            const query = document.getElementById('search').value.toLowerCase();
-            const data = JSON.parse(localStorage.getItem(localStorageKey)) || [];
-
-            // 검색 필터
-            const filteredData = data.filter(entry =>
-                entry.author.toLowerCase().includes(query) ||
-                entry.title.toLowerCase().includes(query) ||
-                entry.media.toLowerCase().includes(query)
-            );
-
-            // 정렬: 1차 년도 오름차순, 2차 월 오름차순
-            filteredData.sort((a, b) => {
-                if (a.year === b.year) {
-                    return a.month.localeCompare(b.month);
-                }
-                return a.year - b.year;
-            });
-
-            // 테이블 초기화 후 재삽입
-            dataTable.innerHTML = '';
-            filteredData.forEach(addRowToTable);
-        });
-
-        // 초기화 버튼 이벤트
-        document.getElementById('resetButton').addEventListener('click', function(event) {
-            event.preventDefault();
-            document.getElementById('search').value = '';
-            dataTable.innerHTML = '';
-            loadData();
-        });
-
-        // 초기 데이터 로드
-        loadData();
-    </script>
 </body>
 </html>
