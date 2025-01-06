@@ -35,16 +35,33 @@
         /* 검색창 스타일 */
         .search-container {
             display: flex;
+            gap: 10px; /* 검색창과 버튼 간격 */
             margin-bottom: 20px; /* 검색창 아래 간격 추가 */
+            width: 100%;
         }
 
         .search-container input {
-            width: 100%;
+            flex: 1;
             padding: 10px;
             font-size: 12px;
             border: 1px solid #ccc;
             border-radius: 4px;
             outline: none;
+        }
+
+        .search-container button {
+            padding: 10px 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            background-color: black;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .search-container button:hover {
+            background-color: #333;
         }
 
         /* 입력 폼 스타일 */
@@ -119,6 +136,7 @@
         <!-- 검색창 -->
         <div class="search-container">
             <input type="text" id="search-input" placeholder="작가 이름 또는 작품 제목을 입력하세요">
+            <button id="search-button">검색</button>
         </div>
 
         <!-- 입력 폼 -->
@@ -178,6 +196,7 @@
         const form = document.getElementById('data-form');
         const tableBody = document.getElementById('data-table-body');
         const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
 
         // 로컬 저장소에서 데이터 로드
         const loadData = () => {
@@ -238,8 +257,8 @@
             form.reset();
         });
 
-        // 검색 기능
-        searchInput.addEventListener('input', () => {
+        // 검색 버튼 클릭 처리
+        searchButton.addEventListener('click', () => {
             const query = searchInput.value.toLowerCase();
             const data = JSON.parse(localStorage.getItem('tableData')) || [];
 
