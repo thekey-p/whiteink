@@ -83,6 +83,12 @@
             color: #aaa; /* 구분자 색상 */
         }
     </style>
+    <script>
+        // 버튼 클릭 시 list.html로 이동하는 함수
+        function navigateToList() {
+            window.location.href = "list.html"; // 같은 창에서 list.html로 이동
+        }
+    </script>
 </head>
 <body>
     <!-- 페이지 제목 -->
@@ -93,17 +99,17 @@
         <!-- 검색 입력 필드 -->
         <input type="text" placeholder="작가 이름 또는 작품 제목을 입력하세요">
         <!-- 검색 버튼 -->
-        <button>검색</button>
+        <button onclick="navigateToList()">검색</button>
     </div>
 
     <!-- 텍스트 버튼 컨테이너 -->
     <div class="button-container">
         <!-- 로그인 텍스트 버튼 -->
-        <span>로그인</span>
+        <span onclick="navigateToList()">로그인</span>
         <!-- 구분자 -->
         <span class="divider">|</span>
         <!-- 자료 추가 텍스트 버튼 -->
-        <span>자료 추가</span>
+        <span onclick="navigateToList()">자료 추가</span>
     </div>
 </body>
 </html>
