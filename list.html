@@ -131,7 +131,7 @@
         }
     </style>
 </head>
-// Import the functions you need from the SDKs you need
+    // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -153,7 +153,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-    <body>
+<body>
     <div class="left-pane">
         <div class="logo">White Ink</div>
         <div class="search-container">
@@ -213,7 +213,22 @@ const analytics = getAnalytics(app);
         <div class="no-results" id="no-results" style="display: none;">죄송합니다. 일치하는 내용이 없습니다.</div>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"></script>
     <script>
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
         const form = document.getElementById('data-form');
         const tableBody = document.getElementById('data-table-body');
         const searchInput = document.getElementById('search-input');
@@ -221,15 +236,18 @@ const analytics = getAnalytics(app);
         const resetButton = document.getElementById('reset-button');
         const noResults = document.getElementById('no-results');
 
-        const loadData = () => {
-            const data = JSON.parse(localStorage.getItem('tableData')) || [];
-            renderTable(data);
+        const saveDataToFirebase = (data) => {
+            const ref = firebase.database().ref('entries').push();
+            ref.set(data);
         };
 
-        const saveData = (data) => {
-            const existingData = JSON.parse(localStorage.getItem('tableData')) || [];
-            existingData.push(data);
-            localStorage.setItem('tableData', JSON.stringify(existingData));
+        const loadDataFromFirebase = () => {
+            const ref = firebase.database().ref('entries');
+            ref.on('value', (snapshot) => {
+                const data = snapshot.val();
+                const dataArray = data ? Object.values(data) : [];
+                renderTable(dataArray);
+            });
         };
 
         const renderTable = (data) => {
@@ -271,30 +289,12 @@ const analytics = getAnalytics(app);
                 season: document.getElementById('season').value
             };
 
-            saveData(rowData);
-            renderTable(JSON.parse(localStorage.getItem('tableData')) || []);
+            saveDataToFirebase(rowData); // Firebase에 데이터 저장
             form.reset();
         });
 
-        searchButton.addEventListener('click', () => {
-            const query = searchInput.value.toLowerCase();
-            const data = JSON.parse(localStorage.getItem('tableData')) || [];
-
-            const filteredData = data.filter(row =>
-                row.author.toLowerCase().includes(query) ||
-                row.title.toLowerCase().includes(query) ||
-                row.publication.toLowerCase().includes(query)
-            );
-
-            renderTable(filteredData);
-        });
-
-        resetButton.addEventListener('click', () => {
-            searchInput.value = '';
-            renderTable(JSON.parse(localStorage.getItem('tableData')) || []);
-        });
-
-        loadData();
+        loadDataFromFirebase(); // Firebase에서 데이터 로드
     </script>
 </body>
 </html>
+loadDataFromFirebase(); // Firebase에서 데이터 로드
