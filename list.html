@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>List Page</title>
     <style>
-        /* 전체 페이지 레이아웃 설정 */
         body {
             margin: 0;
             display: flex;
@@ -13,35 +12,32 @@
             font-family: Arial, sans-serif;
         }
 
-        /* 왼쪽 창 스타일 */
         .left-pane {
-            width: 25%; /* 화면의 25% 차지 */
+            width: 25%;
             background-color: #f4f4f4;
             padding: 20px;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            align-items: center; /* 가운데 정렬 */
+            align-items: center;
         }
 
-        /* 로고 스타일 */
         .logo {
             font-size: 12pt;
             font-weight: bold;
-            margin-bottom: 20px; /* 검색창과의 간격 */
+            margin-bottom: 20px;
             text-align: center;
         }
 
-        /* 검색창 스타일 */
         .search-container {
             display: flex;
-            gap: 10px; /* 검색창과 버튼 간격 */
-            margin-bottom: 20px; /* 검색창 아래 간격 추가 */
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
             width: 100%;
         }
 
         .search-container input {
-            flex: 1;
             padding: 10px;
             font-size: 12px;
             border: 1px solid #ccc;
@@ -64,11 +60,10 @@
             background-color: #333;
         }
 
-        /* 입력 폼 스타일 */
         .input-form {
             display: flex;
             flex-direction: column;
-            gap: 10px; /* 항목 간격 */
+            gap: 10px;
             width: 100%;
         }
 
@@ -84,7 +79,6 @@
             border-radius: 4px;
         }
 
-        /* 제출 버튼 스타일 */
         .input-form button {
             padding: 10px;
             font-size: 12px;
@@ -94,25 +88,27 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            margin-top: 10px; /* 상단 간격 */
+            margin-top: 10px;
         }
 
         .input-form button:hover {
             background-color: #333;
         }
 
-        /* 오른쪽 창 스타일 */
         .right-pane {
-            flex: 1; /* 남은 화면 공간 차지 */
+            flex: 1;
             padding: 20px;
             box-sizing: border-box;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .right-pane table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 10pt; /* 텍스트 크기 10pt */
+            font-size: 10pt;
         }
 
         .right-pane th, .right-pane td {
@@ -125,21 +121,25 @@
             background-color: #f0f0f0;
             font-weight: bold;
         }
+
+        .right-pane .no-results {
+            font-size: 12pt;
+            font-weight: bold;
+            color: black;
+            margin-top: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <!-- 왼쪽 창 -->
     <div class="left-pane">
-        <!-- 로고 -->
         <div class="logo">White Ink</div>
-
-        <!-- 검색창 -->
         <div class="search-container">
-            <input type="text" id="search-input" placeholder="작가 이름 또는 작품 제목을 입력하세요">
+            <input type="text" id="search-input" placeholder="작가 이름, 작품 제목 또는 발표 지면을 입력하세요">
             <button id="search-button">검색</button>
+            <button id="reset-button">초기화</button>
         </div>
 
-        <!-- 입력 폼 -->
         <form class="input-form" id="data-form">
             <label for="author">저자 이름</label>
             <input type="text" id="author" name="author" placeholder="저자 이름" required>
@@ -173,7 +173,6 @@
         </form>
     </div>
 
-    <!-- 오른쪽 창 -->
     <div class="right-pane">
         <table>
             <thead>
@@ -187,9 +186,9 @@
                 </tr>
             </thead>
             <tbody id="data-table-body">
-                <!-- 데이터 행 추가 예정 -->
             </tbody>
         </table>
+        <div class="no-results" id="no-results" style="display: none;">죄송합니다. 일치하는 내용이 없습니다.</div>
     </div>
 
     <script>
@@ -197,23 +196,21 @@
         const tableBody = document.getElementById('data-table-body');
         const searchInput = document.getElementById('search-input');
         const searchButton = document.getElementById('search-button');
+        const resetButton = document.getElementById('reset-button');
+        const noResults = document.getElementById('no-results');
 
-        // 로컬 저장소에서 데이터 로드
         const loadData = () => {
             const data = JSON.parse(localStorage.getItem('tableData')) || [];
             renderTable(data);
         };
 
-        // 데이터 저장 함수
         const saveData = (data) => {
             const existingData = JSON.parse(localStorage.getItem('tableData')) || [];
             existingData.push(data);
             localStorage.setItem('tableData', JSON.stringify(existingData));
         };
 
-        // 테이블에 데이터 렌더링
         const renderTable = (data) => {
-            // 정렬: 발표 년도 -> 발표 시기
             data.sort((a, b) => {
                 if (a.year === b.year) {
                     return a.season.localeCompare(b.season);
@@ -222,10 +219,14 @@
             });
 
             tableBody.innerHTML = '';
-            data.forEach(row => addRow(row));
+            if (data.length === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+                data.forEach(row => addRow(row));
+            }
         };
 
-        // 테이블에 행 추가 함수
         const addRow = (rowData) => {
             const row = document.createElement('tr');
             Object.values(rowData).forEach(text => {
@@ -236,7 +237,6 @@
             tableBody.appendChild(row);
         };
 
-        // 폼 제출 처리
         form.addEventListener('submit', (event) => {
             event.preventDefault();
 
@@ -249,28 +249,29 @@
                 season: document.getElementById('season').value
             };
 
-            const existingData = JSON.parse(localStorage.getItem('tableData')) || [];
-            existingData.push(rowData);
-            localStorage.setItem('tableData', JSON.stringify(existingData));
-
-            renderTable(existingData);
+            saveData(rowData);
+            renderTable(JSON.parse(localStorage.getItem('tableData')) || []);
             form.reset();
         });
 
-        // 검색 버튼 클릭 처리
         searchButton.addEventListener('click', () => {
             const query = searchInput.value.toLowerCase();
             const data = JSON.parse(localStorage.getItem('tableData')) || [];
 
             const filteredData = data.filter(row =>
                 row.author.toLowerCase().includes(query) ||
-                row.title.toLowerCase().includes(query)
+                row.title.toLowerCase().includes(query) ||
+                row.publication.toLowerCase().includes(query)
             );
 
             renderTable(filteredData);
         });
 
-        // 초기 데이터 로드
+        resetButton.addEventListener('click', () => {
+            searchInput.value = '';
+            renderTable(JSON.parse(localStorage.getItem('tableData')) || []);
+        });
+
         loadData();
     </script>
 </body>
