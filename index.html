@@ -3,69 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WHITE INK</title>
+    <title>홈페이지 첫 페이지</title>
     <style>
+        /* 전체 페이지 스타일 설정 */
         body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #ffffff;
+            margin: 0; /* 기본 여백 제거 */
+            padding: 0; /* 기본 패딩 제거 */
+            display: flex; /* 플렉스 박스 레이아웃 설정 */
+            flex-direction: column; /* 플렉스 방향을 세로로 설정 */
+            justify-content: center; /* 수직 중앙 정렬 */
+            align-items: center; /* 수평 중앙 정렬 */
+            height: 100vh; /* 뷰포트 전체 높이 설정 */
+            background-color: #f9f9f9; /* 배경색 설정 */
+            font-family: Arial, sans-serif; /* 기본 글꼴 설정 */
         }
 
-        .container {
-            text-align: center;
+        /* 페이지 제목 스타일 */
+        h1 {
+            font-size: 50px; /* 글자 크기 */
+            font-weight: bold; /* 굵은 글자 */
+            color: black; /* 글자 색상 */
+            margin-bottom: 20px; /* 아래쪽 여백 */
         }
 
-        .title {
-            font-size: 70pt;
-            font-weight: bold;
-            color: #000000;
-            margin: 0;
+        /* 검색창과 버튼을 포함하는 컨테이너 스타일 */
+        .search-container {
+            display: flex; /* 버튼과 검색창을 한 줄에 배치 */
+            margin-bottom: 20px; /* 아래쪽 여백 */
         }
 
-        .search-box {
-            margin-top: 20px;
+        /* 검색 입력 필드 스타일 */
+        .search-container input {
+            width: 300px; /* 입력 필드 너비 */
+            padding: 10px; /* 내부 여백 */
+            font-size: 16px; /* 글자 크기 */
+            border: 2px solid #ccc; /* 테두리 설정 */
+            border-radius: 5px 0 0 5px; /* 왼쪽 모서리 둥글게 */
+            outline: none; /* 포커스 시 기본 외곽선 제거 */
         }
 
-        .search-box input[type="text"] {
-            width: 300px;
-            height: 40px;
-            font-size: 12pt;
-            padding: 5px 10px;
-            border: 2px solid #000;
-            border-radius: 5px;
+        /* 검색 버튼 스타일 */
+        .search-container button {
+            padding: 10px 20px; /* 내부 여백 */
+            font-size: 16px; /* 글자 크기 */
+            font-weight: bold; /* 굵은 글자 */
+            color: white; /* 글자 색상 */
+            background-color: black; /* 버튼 배경색 */
+            border: none; /* 테두리 제거 */
+            border-radius: 0 5px 5px 0; /* 오른쪽 모서리 둥글게 */
+            cursor: pointer; /* 커서를 손 모양으로 변경 */
         }
 
-        .login-button {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16pt;
-            font-weight: bold;
-            color: #ffffff;
-            background-color: #000000;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
+        /* 검색 버튼 호버 효과 */
+        .search-container button:hover {
+            background-color: #333; /* 어두운 색으로 변경 */
         }
 
-        .login-button:hover {
-            background-color: #333333;
+        /* 텍스트 버튼 컨테이너 스타일 */
+        .button-container {
+            font-size: 16px; /* 글자 크기 */
+            font-weight: bold; /* 굵은 글자 */
+            color: black; /* 텍스트 색상 */
+        }
+
+        /* 텍스트 버튼 스타일 */
+        .button-container span {
+            cursor: pointer; /* 클릭 가능한 텍스트처럼 보이도록 설정 */
+            margin: 0 10px; /* 텍스트 간격 설정 */
+        }
+
+        /* 텍스트 버튼 호버 효과 */
+        .button-container span:hover {
+            text-decoration: underline; /* 호버 시 밑줄 표시 */
+        }
+
+        /* 구분자 스타일 */
+        .button-container .divider {
+            margin: 0 5px; /* 구분자 좌우 간격 설정 */
+            color: #aaa; /* 구분자 색상 */
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="title">WHITE INK</h1>
-        <div class="search-box">
-            <input type="text" placeholder="Search...">
-        </div>
-        <a href="#" class="login-button">Login</a>
+    <!-- 페이지 제목 -->
+    <h1>WHITE INK</h1>
+
+    <!-- 검색창과 버튼 컨테이너 -->
+    <div class="search-container">
+        <!-- 검색 입력 필드 -->
+        <input type="text" placeholder="검색어를 입력하세요">
+        <!-- 검색 버튼 -->
+        <button>검색</button>
+    </div>
+
+    <!-- 텍스트 버튼 컨테이너 -->
+    <div class="button-container">
+        <!-- 로그인 텍스트 버튼 -->
+        <span>로그인</span>
+        <!-- 구분자 -->
+        <span class="divider">|</span>
+        <!-- 자료 추가 텍스트 버튼 -->
+        <span>자료 추가</span>
     </div>
 </body>
 </html>
